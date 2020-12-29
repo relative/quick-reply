@@ -32,6 +32,12 @@ class QuickReply extends Plugin {
       shouldMention,
       showMentionToggle,
     })
+    this.jumpToMessage({
+      channelId: channel.id,
+      messageId: message.id,
+      flash: true,
+      returnMessageId: channel.lastMessageId
+    })
   }
   async deletePendingReply(data) {
     Dispatcher.dirtyDispatch({
@@ -89,8 +95,10 @@ class QuickReply extends Plugin {
   async startPlugin() {
     const { getChannel } = await getModule(['getChannel'])
     const { getMessages } = await getModule(['getMessages'])
+    const { jumpToMessage } = await getModule(['jumpToMessage'])
     this.getChannel = getChannel
     this.getMessages = getMessages
+    this.jumpToMessage = jumpToMessage
 
     Dispatcher.subscribe(ActionTypes.CHANNEL_SELECT, this.channelSelect)
     Dispatcher.subscribe(
